@@ -1,4 +1,4 @@
-# Biconomy Social Authentication
+# Next 13 - Biconomy Social Authentication Starter
 
 This is a [Next.js](https://nextjs.org/) project integrated with Biconomy's Social Login and Smart Account features, allowing users to log into the dApp with various social platforms and create gasless transactions.
 
