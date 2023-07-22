@@ -6,6 +6,7 @@ import { ChainId } from '@biconomy/core-types';
 import { ethers } from 'ethers';
 import { BiconomySmartAccount } from '@biconomy/account';
 import { Web3Provider } from '@ethersproject/providers';
+import '@biconomy/web3-auth/dist/src/style.css';
 
 export default function Auth() {
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
