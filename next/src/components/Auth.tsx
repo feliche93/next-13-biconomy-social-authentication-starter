@@ -4,16 +4,16 @@ import { useState, useEffect, useRef } from 'react';
 import SocialLogin from '@biconomy/web3-auth';
 import { ChainId } from '@biconomy/core-types';
 import { ethers } from 'ethers';
-import SmartAccount from '@biconomy/smart-account';
+import { BiconomySmartAccount } from '@biconomy/account';
 import { Web3Provider } from '@ethersproject/providers';
 
 export default function Auth() {
-  const [smartAccount, setSmartAccount] = useState<SmartAccount | null>(null);
+  const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
+    null
+  );
   const [interval, enableInterval] = useState(false);
   const sdkRef = useRef<SocialLogin | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
-  console.log('smartAccount', smartAccount);
 
   useEffect(() => {
     let configureLogin: any;
@@ -42,7 +42,6 @@ export default function Auth() {
       sdkRef.current = socialLoginSDK;
     }
     if (!sdkRef.current.provider) {
-      // sdkRef.current.showConnectModal()
       sdkRef.current.showWallet();
       enableInterval(true);
     } else {
@@ -56,14 +55,15 @@ export default function Auth() {
     sdkRef.current.hideWallet();
     setLoading(true);
     const web3Provider = new Web3Provider(sdkRef.current.provider);
+    const signer = await web3Provider.getSigner();
 
     try {
-      const smartAccount = new SmartAccount(web3Provider, {
-        activeNetworkId: ChainId.POLYGON_MUMBAI,
-        supportedNetworksIds: [ChainId.POLYGON_MAINNET],
+      const smartAccount = new BiconomySmartAccount({
+        signer: signer,
+        chainId: ChainId.POLYGON_MUMBAI,
       });
-      await smartAccount.init();
-      setSmartAccount(smartAccount);
+      const initializedSmartAccount = await smartAccount.init();
+      setSmartAccount(initializedSmartAccount);
       setLoading(false);
     } catch (err) {
       console.log('error setting up smart account... ', err);
