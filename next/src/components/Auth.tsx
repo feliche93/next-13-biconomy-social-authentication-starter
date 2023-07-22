@@ -12,6 +12,7 @@ export default function Auth() {
   const [smartAccount, setSmartAccount] = useState<BiconomySmartAccount | null>(
     null
   );
+  const [address, setAddress] = useState<string>('');
   const [interval, enableInterval] = useState(false);
   const sdkRef = useRef<SocialLogin | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,6 +65,8 @@ export default function Auth() {
         chainId: ChainId.POLYGON_MUMBAI,
       });
       const initializedSmartAccount = await smartAccount.init();
+      const address = await initializedSmartAccount.getSmartAccountAddress();
+      setAddress(address);
       setSmartAccount(initializedSmartAccount);
       setLoading(false);
     } catch (err) {
@@ -97,6 +100,8 @@ export default function Auth() {
       {!!smartAccount && (
         <div className='mt-2'>
           <h3>Smart account address:</h3>
+          <p>{address}</p>
+          <h3>Owner:</h3>
           <p>{smartAccount.owner}</p>
           <button
             className='p-4 w-72 border-0 cursor-pointer rounded-full mt-5 transition-all hover:bg-black hover:bg-opacity-20'
